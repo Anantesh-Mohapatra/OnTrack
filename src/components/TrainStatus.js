@@ -18,12 +18,8 @@ const TrainStatus = ({ initialTrainNumber = '' }) => {
     let token = process.env.REACT_APP_NJTRANSIT_API_KEY; // Get API token from .env file
 
     if (!token) { // If token is not found in .env file
-      console.log('Local .env secret not found, using external URL');
-      token = await fetchApiKey(); // Fetch token from external URL
-      if (!token) { // If token is still not found
-        setError('Token not found. Please check .env setup.');
-        return;
-      }
+      setError('Token not found. Please check .env setup.');
+      return;
     }
 
     setLoading(true);
@@ -82,17 +78,6 @@ const TrainStatus = ({ initialTrainNumber = '' }) => {
       fetchTrainStopList(initialTrainNumber);
     }
   }, [initialTrainNumber, fetchTrainStopList]);
-
-  const fetchApiKey = async () => {
-    try {
-      const response = await fetch('https://ontrack-docker-551821400291.us-central1.run.app/api/key');
-      const data = await response.json();
-      return data.apiKey;
-    } catch (err) {
-      console.error('Error fetching API key:', err);
-      return null;
-    }
-  };
 
   const handleSubmit = (e) => { // When the form is submitted, the entire page is prevented from reloading, and the train data is fetched
     e.preventDefault();
